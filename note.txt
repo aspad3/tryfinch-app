@@ -1,0 +1,29 @@
+DESCRIPTION | WORKING TIME
+Build Ruby Gem for TryFinch
+
+Handle requests and responses to the TryFinch API
+2 days
+Connect Client's HR System
+
+Implement Finch Connect redirection flow
+Save client's HR system (provider) authentication token
+3 days
+Data Polling & Retrieval
+
+Poll TryFinch daily to check for payroll runs on every connected HRM system/provider
+Save payroll data into a CSV file and store it in file storage
+7 days
+Automated Email Delivery
+
+Send the CSV payroll report as an attachment to the business email associated with the client
+1 day
+Client's Configuration Page
+
+Display a list of HRM providers connected to Docyt
+Toggle to activate/deactivate TryFinch connectivity
+2 days
+Deployment and Scheduling
+
+Deploy the application to Heroku
+Perform testing & QA
+2 days

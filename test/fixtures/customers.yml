@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  customer_id: MyString
+  customer_name: MyString
+  access_token: MyText
+  response_finch: 
+
+two:
+  customer_id: MyString
+  customer_name: MyString
+  access_token: MyText
+  response_finch: 

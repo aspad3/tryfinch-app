@@ -1,0 +1,31 @@
+<h1>Payroll Reports for <%= current_user.fullname %></h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>File</th>
+      <th>Created At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @archive_payrolls.each do |archive| %>
+      <tr>
+        <td><%= archive.start_date %></td>
+        <td><%= archive.end_date %></td>
+        <td>
+          <% file_path = "public#{archive.file_path}" %>
+          <% if File.exist?(file_path) %>
+            <a href="<%= archive.file_path %>" download>Download</a>
+          <% else %>
+            <span style="color: red;">File not found</span>
+          <% end %>
+        </td>
+        <td><%= archive.created_at.strftime("%d-%m-%Y %H:%M") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "+ Archive", new_archive_payroll_path, class: "btn btn-primary" %>

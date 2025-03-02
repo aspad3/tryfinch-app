@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  payroll_id: MyString
+  pay_period_start: 2025-02-26
+  pay_period_end: 2025-02-26
+  pay_date: 2025-02-26
+  gross_pay: 1
+  net_pay: 1
+  currency: MyString
+  individual_ids: MyText
+
+two:
+  payroll_id: MyString
+  pay_period_start: 2025-02-26
+  pay_period_end: 2025-02-26
+  pay_date: 2025-02-26
+  gross_pay: 1
+  net_pay: 1
+  currency: MyString
+  individual_ids: MyText

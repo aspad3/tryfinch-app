@@ -1,0 +1,21 @@
+<h1>Generate New Payroll Report</h1>
+
+<%= form_with url: archive_payrolls_path, method: :post do %>
+  <div>
+    <label>Start Date:</label>
+    <%= date_field_tag :start_date%>
+  </div>
+
+  <div>
+    <label>End Date:</label>
+    <%= date_field_tag :end_date %>
+  </div>
+
+  <%= hidden_field_tag :customer_id, @customer.id %>
+
+  <div>
+    <%= submit_tag "Generate Report", class: "btn btn-success" %>
+  </div>
+<% end %>
+
+<%= link_to "Back to Reports", archive_payrolls_path, class: "btn btn-secondary" %>
