@@ -42,13 +42,13 @@ class ArchivePayrollsController < ApplicationController
     if File.exist?(payroll_report_path)
       send_file payroll_report_path, filename: File.basename(payroll_report_path), type: "text/csv"
     else
-      redirect_to archive_payrolls_path, alert: "❌ File not found."
+      redirect_to request.referer || payrolls_path , alert: "❌ File not found."
     end
   end
 
   def send_email
     PayrollReportMailerService.new(@customer, @payroll.pay_date).send_email
-    redirect_to archive_payrolls_path, notice: "📧 Payroll report email sent."
+    redirect_to request.referer || payrolls_path, notice: "📧 Payroll report email sent."
   end
 
   private
