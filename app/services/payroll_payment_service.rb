@@ -11,7 +11,7 @@ class PayrollPaymentService
 
     payroll_data.each do |payroll|
       next if payroll.blank?
-      PayrollPayment.find_or_create_by(payroll_id: payroll["id"]) do |payment|
+      PayrollPayment.find_or_create_by(payroll_id: payroll["id"], customer_id: @customer.id) do |payment|
         payment.customer_id = @customer.id
         payment.individual_ids = payroll["individual_ids"]
         payment.pay_group_ids = payroll["pay_group_ids"]

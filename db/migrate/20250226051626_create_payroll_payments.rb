@@ -24,6 +24,6 @@ class CreatePayrollPayments < ActiveRecord::Migration[7.1]
     end
 
     add_index :payroll_payments, :customer_id
-    add_index :payroll_payments, :payroll_id, unique: true
+    add_index :payroll_payments, :payroll_id
   end
 end
