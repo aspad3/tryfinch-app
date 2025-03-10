@@ -13,7 +13,7 @@ namespace :payroll do
       puts "🔹 There no report for #{start_date} to #{end_date}" if payroll.blank?
       customer.payroll_payments.where(pay_date: Date.parse(start_date)..Date.parse(end_date)).each do |payment|
         PayrollCsvGeneratorService.new(payment).generate_csv_file
-        PayrollReportMailerService.new(customer, payment.pay_date).send_email
+        PayrollReportMailerService.new(customer, payment).send_email
         puts "🔹 generate CSV for #{customer.customer_name} and payment: #{payment.pay_date}"
       end
     end

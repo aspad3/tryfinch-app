@@ -39,7 +39,7 @@ class ArchivePayrollsController < ApplicationController
   end
 
   def download
-    if File.exist?(payroll_report_path)
+    if File.exist?(PayrollCsvGeneratorService.new(@payroll).generate_csv_file)
       send_file payroll_report_path, filename: File.basename(payroll_report_path), type: "text/csv"
     else
       redirect_to request.referer || payrolls_path , alert: "❌ File not found."
@@ -47,7 +47,7 @@ class ArchivePayrollsController < ApplicationController
   end
 
   def send_email
-    PayrollReportMailerService.new(@customer, @payroll.pay_date).send_email
+    PayrollReportMailerService.new(@customer, @payroll).send_email
     redirect_to request.referer || payrolls_path, notice: "📧 Payroll report email sent."
   end
 
