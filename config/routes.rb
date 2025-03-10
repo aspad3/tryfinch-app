@@ -17,12 +17,10 @@ Rails.application.routes.draw do
     get :connect, on: :member
   end
 
-  resources :archive_payrolls, only: %i[index new create show] do
-    member do
-      get "download/:payroll_payment_id", to: "archive_payrolls#download", as: :download
-      post "send_email/:payroll_payment_id", to: "archive_payrolls#send_email", as: :send_email
-    end
-  end
+  resources :archive_payrolls, only: %i[index new create show]
+  resources :payrolls, only: %i[index]
+  get "download/:payroll_payment_id", to: "archive_payrolls#download", as: :download
+  post "send_email/:payroll_payment_id", to: "archive_payrolls#send_email", as: :send_email
 
   resources :payrolls
   root "home#index"  # Set home page as default after login

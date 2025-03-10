@@ -1,24 +1,16 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
   database: try_finch_app_development
-  username: <%= ENV["DB_USERNAME"] || "your_local_user" %>
-  password: <%= ENV["DB_PASSWORD"] || "your_local_password" %>
-  host: <%= ENV["DB_HOST"] || "localhost" %>
-  port: <%= ENV["DB_PORT"] || 5432 %>
-
 test:
   <<: *default
   database: try_finch_app_test
-  username: <%= ENV["DB_USERNAME"] || "your_local_user" %>
-  password: <%= ENV["DB_PASSWORD"] || "your_local_password" %>
-  host: <%= ENV["DB_HOST"] || "localhost" %>
-  port: <%= ENV["DB_PORT"] || 5432 %>
-
 production:
   <<: *default
   url: <%= ENV["DATABASE_URL"] %>

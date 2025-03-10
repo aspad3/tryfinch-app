@@ -17,6 +17,9 @@
         <% if user_signed_in? %>
           <%= link_to "Archive", archive_payrolls_path, class: "nav-link" %>
         <% end %>
+        <% if user_signed_in? %>
+          <%= link_to "Payrolls", payrolls_path, class: "nav-link" %>
+        <% end %>
       </div>
       <div class="nav-right">
         <% if user_signed_in? %>

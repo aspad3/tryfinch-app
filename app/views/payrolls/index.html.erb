@@ -1,7 +1,3 @@
-<h1>Payroll Details</h1>
-
-<p><strong>Archive Period:</strong> <%= @archive.start_date.strftime("%B %d, %Y") %> to <%= @archive.end_date.strftime("%B %d, %Y") %></p>
-
 <table class="payroll-table">
   <thead>
     <tr>
@@ -29,8 +25,6 @@
     <% end %>
   </tbody>
 </table>
-
-<%= link_to "Back", archive_payrolls_path, class: "btn btn-secondary" %>
 
 <style>
   .payroll-table {

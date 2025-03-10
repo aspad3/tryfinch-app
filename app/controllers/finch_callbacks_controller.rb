@@ -1,4 +1,5 @@
 class FinchCallbacksController < ApplicationController
+  before_action :authenticate_user!
   protect_from_forgery except: :handle
 
   def disconnect
@@ -6,7 +7,7 @@ class FinchCallbacksController < ApplicationController
     
     if customer
       customer.disconnect
-      flash[:notice] = "Successfully disconnected from #{customer.meta_data.dig('provider_id').to_s.humanize}."
+      flash[:notice] = "Successfully disconnected"
     else
       flash[:alert] = "Customer not found."
     end

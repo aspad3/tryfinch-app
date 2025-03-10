@@ -1,9 +1,10 @@
 class ArchivePayrollsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_customer
-  before_action :set_archive, only: %i[show download send_email]
+  before_action :set_archive, only: %i[show]
   before_action :set_payroll, only: %i[download send_email]
 
-  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  # rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
     @archive_payrolls = @customer.archive_payrolls.order(created_at: :desc)
@@ -34,7 +35,7 @@ class ArchivePayrollsController < ApplicationController
   end
 
   def show
-    @payrolls = PayrollPayment.where(pay_date: @archive.start_date..@archive.end_date)
+    @payrolls = PayrollPayment.where(pay_date: @archive.start_date..@archive.end_date).order(pay_date: :asc)
   end
 
   def download
