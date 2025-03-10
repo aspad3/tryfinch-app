@@ -14,7 +14,7 @@ gem "tzinfo-data", platforms: %i[windows jruby]
 gem "bootsnap", require: false
 gem "dotenv"
 gem "faker"
-gem "tryfinch-api", "0.0.1", path: "../tryfinch-api"
+gem "tryfinch-api", git: "https://github.com/aspad3/tryfinch-api.git", branch: "main"
 gem 'devise'
 
 group :development, :test do
