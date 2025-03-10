@@ -10,12 +10,20 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   get "/finch/callback", to: "finch_callbacks#handle"
+  get "finch_callbacks/disconnect", to: "finch_callbacks#disconnect", as: :disconnect_finch
 
-  # Route to display customer list (index)
-  resources :customers do
-    # Custom route for "connect" action on each customer
+  # Define routes for customers with only the "connect" action as a member route
+  resources :customers, only: [:index] do
     get :connect, on: :member
   end
-  resources :archive_payrolls
+
+  resources :archive_payrolls, only: %i[index new create show] do
+    member do
+      get "download/:payroll_payment_id", to: "archive_payrolls#download", as: :download
+      post "send_email/:payroll_payment_id", to: "archive_payrolls#send_email", as: :send_email
+    end
+  end
+
+  resources :payrolls
   root "home#index"  # Set home page as default after login
 end

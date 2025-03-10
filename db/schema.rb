@@ -12,11 +12,11 @@
 
 ActiveRecord::Schema[7.1].define(version: 2025_03_02_211932) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "archive_payrolls", force: :cascade do |t|
-    t.bigint "customer_id", null: false
-    t.string "file_path"
+    t.uuid "customer_id"
     t.date "start_date"
     t.date "end_date"
     t.datetime "created_at", null: false
@@ -24,52 +24,81 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_02_211932) do
     t.index ["customer_id"], name: "index_archive_payrolls_on_customer_id"
   end
 
-  create_table "customers", force: :cascade do |t|
-    t.integer "user_id"
+  create_table "customers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.text "access_token"
-    t.jsonb "response_finch"
+    t.jsonb "meta_data"
+    t.jsonb "provider_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_customers_on_user_id"
   end
 
-  create_table "payroll_employees", force: :cascade do |t|
-    t.string "payroll_id"
-    t.string "employee_id"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "email"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "payroll_employees", id: false, force: :cascade do |t|
+    t.uuid "individual_id", null: false
+    t.string "first_name", null: false
     t.string "middle_name"
+    t.string "last_name", null: false
     t.string "title"
+    t.uuid "manager_id"
+    t.string "department_name"
     t.string "employment_type"
     t.string "employment_subtype"
     t.date "start_date"
     t.date "end_date"
     t.date "latest_rehire_date"
-    t.boolean "is_active"
-    t.text "location"
-    t.decimal "income_amount"
-    t.string "income_currency"
-    t.string "income_unit"
-    t.index ["payroll_id", "employee_id"], name: "index_payroll_employees_on_payroll_id_and_employee_id", unique: true
+    t.boolean "is_active", default: true
+    t.string "employment_status"
+    t.string "class_code"
+    t.jsonb "location", default: {}
+    t.jsonb "income", default: {}
+    t.jsonb "income_history", default: []
+    t.jsonb "custom_fields", default: []
+    t.index ["individual_id"], name: "index_payroll_employees_on_individual_id", unique: true
   end
 
-  create_table "payroll_reports", force: :cascade do |t|
-    t.integer "customer_id"
-    t.string "payroll_id"
+  create_table "payroll_payment_statements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "payment_id", null: false
+    t.uuid "individual_id", null: false
+    t.string "statement_type", null: false
+    t.string "payment_method", null: false
+    t.decimal "total_hours", precision: 10, scale: 2, null: false
+    t.decimal "gross_pay_amount", precision: 15, scale: 2, null: false
+    t.string "gross_pay_currency", null: false
+    t.decimal "net_pay_amount", precision: 15, scale: 2, null: false
+    t.string "net_pay_currency", null: false
+    t.jsonb "earnings", default: [], null: false
+    t.jsonb "taxes", default: [], null: false
+    t.jsonb "employee_deductions", default: [], null: false
+    t.jsonb "employer_contributions", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "payroll_payments", force: :cascade do |t|
+    t.uuid "customer_id"
+    t.uuid "payroll_id"
     t.date "pay_period_start"
     t.date "pay_period_end"
     t.date "pay_date"
-    t.integer "gross_pay"
-    t.integer "net_pay"
-    t.string "currency"
-    t.text "individual_ids", default: [], array: true
+    t.date "debit_date"
+    t.decimal "company_debit_amount", precision: 15, scale: 2
+    t.string "company_debit_currency"
+    t.decimal "gross_pay_amount", precision: 15, scale: 2
+    t.string "gross_pay_currency"
+    t.decimal "net_pay_amount", precision: 15, scale: 2
+    t.string "net_pay_currency"
+    t.decimal "employer_taxes_amount", precision: 15, scale: 2
+    t.string "employer_taxes_currency"
+    t.decimal "employee_taxes_amount", precision: 15, scale: 2
+    t.string "employee_taxes_currency"
+    t.jsonb "individual_ids", default: []
+    t.jsonb "pay_group_ids", default: []
+    t.jsonb "pay_frequencies", default: []
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["customer_id"], name: "index_payroll_reports_on_customer_id"
-    t.index ["payroll_id"], name: "index_payroll_reports_on_payroll_id", unique: true
+    t.index ["customer_id"], name: "index_payroll_payments_on_customer_id"
+    t.index ["payroll_id"], name: "index_payroll_payments_on_payroll_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -86,5 +115,4 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_02_211932) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "archive_payrolls", "customers"
 end

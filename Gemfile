@@ -27,6 +27,7 @@ group :development do
   gem "rubocop-rails", "~> 2.30"
   gem "rubocop-performance", "~> 1.24"
   gem "rubocop-rspec", "~> 3.5"
+  gem "letter_opener"
 end
 
 group :test do

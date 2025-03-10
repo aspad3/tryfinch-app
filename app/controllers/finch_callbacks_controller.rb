@@ -1,6 +1,19 @@
 class FinchCallbacksController < ApplicationController
   protect_from_forgery except: :handle
 
+  def disconnect
+    customer = Customer.find_by(id: params[:customer_id])
+    
+    if customer
+      customer.disconnect
+      flash[:notice] = "Successfully disconnected from #{customer.meta_data.dig('provider_id').to_s.humanize}."
+    else
+      flash[:alert] = "Customer not found."
+    end
+
+    redirect_to root_path
+  end
+
   def handle
     code = params[:code]
     return render json: { error: "No authorization code received" }, status: :unprocessable_entity unless code
@@ -10,17 +23,18 @@ class FinchCallbacksController < ApplicationController
     result = Tryfinch::API::Token.exchange_code_for_token(code)
 
     if result && result["access_token"]
-      # Find the customer by the customer_id (assumed that customer_id is in the result)
-      customer = User.find_by(id: result["customer_id"])&.customer
+      customer = Customer.find_by(id: result["customer_id"])
+      # provider = Tryfinch::API::Token.provider(result["access_token"])
+      provider = {}
 
       if customer
         # Update the customer with the access token and response from Finch
         customer.update!(
           access_token: result["access_token"],
-          response_finch: result
+          meta_data: result,
+          provider_data: provider
         )
-        Rails.logger.info("Successfully updated customer with access token: #{result['access_token']}")
-        
+
         # Redirect to customers path with a success message
         redirect_to root_path, notice: "Customer successfully updated with access token."
       else

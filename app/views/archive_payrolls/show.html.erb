@@ -1,0 +1,73 @@
+<h1>Payroll Details</h1>
+
+<p><strong>Archive Period:</strong> <%= @archive.start_date.strftime("%B %d, %Y") %> to <%= @archive.end_date.strftime("%B %d, %Y") %></p>
+
+<table class="payroll-table">
+  <thead>
+    <tr>
+      <th>Pay Date</th>
+      <th>Period Range</th>
+      <th>Total Employees</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @payrolls.each do |payroll| %>
+      <tr>
+        <td><%= payroll.pay_date.strftime("%B %d, %Y") %></td>
+        <td>
+          <%= payroll.pay_period_start.strftime("%B %d, %Y") %> 
+          &ndash; 
+          <%= payroll.pay_period_end.strftime("%B %d, %Y") %>
+        </td>
+        <td><%= payroll.individual_ids.count %></td>
+        <td>
+          <%= link_to "⬇ Download CSV", download_archive_payroll_path(@archive, payroll.id), class: "btn btn-primary" %>
+          <%= button_to "📧 Send Email", send_email_archive_payroll_path(@archive, payroll.id), method: :post, class: "btn btn-success" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Back", archive_payrolls_path, class: "btn btn-secondary" %>
+
+<style>
+  .payroll-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  .payroll-table th, .payroll-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  .payroll-table th {
+    background-color: #007bff;
+    color: white;
+  }
+  .btn {
+    display: inline-block;
+    padding: 8px 12px;
+    margin-right: 5px;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+  }
+  .btn-success {
+    background-color: #28a745;
+    color: white;
+  }
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  .btn-sm {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+</style>

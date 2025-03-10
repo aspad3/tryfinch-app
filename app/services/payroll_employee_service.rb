@@ -1,7 +1,6 @@
 class PayrollEmployeeService
-  def initialize(access_token, payroll_id, individual_ids)
+  def initialize(access_token, individual_ids)
     @access_token = access_token
-    @payroll_id = payroll_id
     @individual_ids = individual_ids
   end
 
@@ -14,24 +13,26 @@ class PayrollEmployeeService
       next unless employee_response["code"] == 200 && employee_response["body"].present?
 
       employee = employee_response["body"]
-      
-      payroll_employee = PayrollEmployee.find_or_initialize_by(payroll_id: @payroll_id, employee_id: employee["id"])
-      payroll_employee.assign_attributes(
-        first_name: employee["first_name"],
-        last_name: employee["last_name"],
-        middle_name: employee["middle_name"],
-        title: employee["title"],
-        employment_type: employee.dig("employment", "type"),
-        employment_subtype: employee.dig("employment", "subtype"),
-        start_date: employee["start_date"],
-        end_date: employee["end_date"],
-        latest_rehire_date: employee["latest_rehire_date"],
-        is_active: employee["is_active"],
-        location: format_location(employee["location"]),
-        income_amount: employee.dig("income", "amount"),
-        income_currency: employee.dig("income", "currency"),
-        income_unit: employee.dig("income", "unit")
-      )
+      payroll_employee = PayrollEmployee.find_or_initialize_by(individual_id: employee["id"])
+      payroll_employee.first_name = employee["first_name"]
+      payroll_employee.middle_name = employee["middle_name"]
+      payroll_employee.last_name = employee["last_name"]
+      payroll_employee.title = employee["title"]
+      payroll_employee.manager_id = employee.dig("manager", "id")
+      payroll_employee.department_name = employee.dig("department", "name")
+      payroll_employee.employment_type = employee.dig("employment", "type")
+      payroll_employee.employment_subtype = employee.dig("employment", "subtype")
+      payroll_employee.start_date = employee["start_date"]
+      payroll_employee.end_date = employee["end_date"]
+      payroll_employee.latest_rehire_date = employee["latest_rehire_date"]
+      payroll_employee.is_active = employee["is_active"]
+      payroll_employee.employment_status = employee["employment_status"]
+      payroll_employee.class_code = employee["class_code"]
+      payroll_employee.location = employee["location"]
+      payroll_employee.income = employee["income"]
+      payroll_employee.income_history = employee["income_history"]
+      payroll_employee.custom_fields = employee["custom_fields"]
+      payroll_employee.save!
       payroll_employee.save if payroll_employee.changed?
     end
   end

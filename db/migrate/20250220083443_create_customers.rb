@@ -1,12 +1,13 @@
 class CreateCustomers < ActiveRecord::Migration[7.1]
   def change
-    create_table :customers do |t|
-      t.integer :user_id
+    enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
+
+    create_table :customers, id: :uuid do |t|
+      t.references :user, null: false
       t.text :access_token
-      t.jsonb :response_finch
+      t.jsonb :meta_data
+      t.jsonb :provider_data
       t.timestamps
     end
-
-    add_index :customers, :user_id
   end
 end

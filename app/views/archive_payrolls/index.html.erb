@@ -1,31 +1,106 @@
-<h1>Payroll Reports for <%= current_user.fullname %></h1>
+<h1>📂 Archive Payrolls for <%= current_user.fullname %></h1>
 
-<table>
+<table class="payroll-table">
   <thead>
     <tr>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>File</th>
-      <th>Created At</th>
+      <th>📅 Start Date</th>
+      <th>📅 End Date</th>
+      <th>📜 Payrolls</th>
     </tr>
   </thead>
   <tbody>
     <% @archive_payrolls.each do |archive| %>
       <tr>
-        <td><%= archive.start_date %></td>
-        <td><%= archive.end_date %></td>
+        <td><%= archive.start_date.strftime("%B %d, %Y") %></td>
+        <td><%= archive.end_date.strftime("%B %d, %Y") %></td>
         <td>
-          <% file_path = "public#{archive.file_path}" %>
-          <% if File.exist?(file_path) %>
-            <a href="<%= archive.file_path %>" download>Download</a>
-          <% else %>
-            <span style="color: red;">File not found</span>
-          <% end %>
+          <%= link_to '📑 View Payroll', archive_payroll_path(archive), class: "btn btn-sm btn-success" %>
         </td>
-        <td><%= archive.created_at.strftime("%d-%m-%Y %H:%M") %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= link_to "+ Archive", new_archive_payroll_path, class: "btn btn-primary" %>
+<div class="action-container">
+  <%= link_to "➕ Add Archive", new_archive_payroll_path, class: "btn btn-primary btn-lg" %>
+</div>
+
+<style>
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .payroll-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .payroll-table th, .payroll-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .payroll-table th {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+  }
+
+  .payroll-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-sm {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    color: white;
+    border: none;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+  }
+
+  .action-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .btn-lg {
+    font-size: 16px;
+    padding: 12px 18px;
+  }
+</style>

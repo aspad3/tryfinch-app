@@ -1,21 +1,91 @@
-<h1>Generate New Payroll Report</h1>
+<h1>📂 Generate New Payroll Report</h1>
 
-<%= form_with url: archive_payrolls_path, method: :post do %>
-  <div>
-    <label>Start Date:</label>
-    <%= date_field_tag :start_date%>
-  </div>
+<div class="form-container">
+  <%= form_with(model: @archive, url: archive_payrolls_path, class: "styled-form") do |f| %>
+    <div class="form-group">
+      <%= f.label :start_date, "Start Date", class: "form-label" %>
+      <%= f.date_field :start_date, class: "form-control" %>
+    </div>
 
-  <div>
-    <label>End Date:</label>
-    <%= date_field_tag :end_date %>
-  </div>
+    <div class="form-group">
+      <%= f.label :end_date, "End Date", class: "form-label" %>
+      <%= f.date_field :end_date, class: "form-control" %>
+    </div>
 
-  <%= hidden_field_tag :customer_id, @customer.id %>
+    <div class="form-actions">
+      <%= f.submit "📌 Create Payroll Archive", class: "btn btn-primary" %>
+      <%= link_to "🔙 Back to Reports", archive_payrolls_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>
 
-  <div>
-    <%= submit_tag "Generate Report", class: "btn btn-success" %>
-  </div>
-<% end %>
+<style>
+  .form-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 
-<%= link_to "Back to Reports", archive_payrolls_path, class: "btn btn-secondary" %>
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .btn-primary {
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background: #0056b3;
+  }
+
+  .btn-secondary {
+    background: #6c757d;
+    color: white;
+    margin-left: 10px;
+  }
+
+  .btn-secondary:hover {
+    background: #545b62;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+</style>
