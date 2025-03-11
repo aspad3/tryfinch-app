@@ -20,7 +20,7 @@ class CreatePayrollEmployees < ActiveRecord::Migration[7.1]
       t.jsonb :income, default: {}
       t.jsonb :income_history, default: []
       t.jsonb :custom_fields, default: []
-      t.index [:individual_id], unique: true, name: "index_payroll_employees_on_individual_id"
+      t.index [:individual_id], unique: true, name: 'index_payroll_employees_on_individual_id'
     end
   end
 end

@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "tryfinch-demo <juarta.app@gmail.com>"
-  layout "mailer"
+  default from: "tryfinch-demo <#{ENV.fetch('SMTP_DEFAULT_FROM', nil)}>"
+  layout 'mailer'
 end

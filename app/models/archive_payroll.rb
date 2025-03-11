@@ -13,12 +13,10 @@ class ArchivePayroll < ApplicationRecord
   def valid_date_range
     return if start_date.nil? || end_date.nil?
 
-    if end_date < start_date
-      errors.add(:end_date, "cannot be earlier than the start date")
-    end
+    errors.add(:end_date, 'cannot be earlier than the start date') if end_date < start_date
 
-    if (end_date - start_date).to_i > 30
-      errors.add(:end_date, "must not exceed 30 days from the start date")
-    end
+    return unless (end_date - start_date).to_i > 30
+
+    errors.add(:end_date, 'must not exceed 30 days from the start date')
   end
 end

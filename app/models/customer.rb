@@ -17,7 +17,7 @@ class Customer < ApplicationRecord
     return false unless access_token.presence
 
     response = Tryfinch::API::SessionConnect.introspect(access_token)
-    response&.dig("connection_status", "status") == 'connected'
+    response&.dig('connection_status', 'status') == 'connected'
   rescue StandardError => e
     Rails.logger.error("Customer##{id} token validation failed: #{e.message}")
     false
@@ -27,7 +27,7 @@ class Customer < ApplicationRecord
     return false unless access_token.presence
 
     response = Tryfinch::API::SessionConnect.disconnect(access_token)
-    return false unless response.present?
+    return false if response.blank?
 
     update(
       access_token: nil,

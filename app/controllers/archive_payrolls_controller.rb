@@ -10,10 +10,15 @@ class ArchivePayrollsController < ApplicationController
     @archive_payrolls = @customer.archive_payrolls.order(created_at: :desc)
   end
 
+  def show
+    @payrolls = PayrollPayment.where(pay_date: @archive.start_date..@archive.end_date).order(pay_date: :asc)
+  end
+
   def new
     @archive_payroll = ArchivePayroll.new
   end
 
+  # rubocop:disable Metrics/AbcSize
   def create
     archive = @customer.archive_payrolls.new(
       start_date: params[:start_date],
@@ -23,32 +28,29 @@ class ArchivePayrollsController < ApplicationController
     if archive.save
       PayrollPaymentService.new(@customer, archive.start_date, archive.end_date).fetch_and_store_payroll
 
-      @customer.payroll_payments.where(pay_date: archive.start_date..archive.end_date).each do |payment|
+      @customer.payroll_payments.where(pay_date: archive.start_date..archive.end_date).find_each do |payment|
         PayrollCsvGeneratorService.new(payment).generate_csv_file
       end
 
-      redirect_to archive_payrolls_path, notice: "✅ Payroll report successfully created."
+      redirect_to archive_payrolls_path, notice: '✅ Payroll report successfully created.'
     else
       flash[:alert] = archive.errors.full_messages.to_sentence
       redirect_to new_archive_payroll_path
     end
   end
-
-  def show
-    @payrolls = PayrollPayment.where(pay_date: @archive.start_date..@archive.end_date).order(pay_date: :asc)
-  end
+  # rubocop:enable Metrics/AbcSize
 
   def download
     if File.exist?(PayrollCsvGeneratorService.new(@payroll).generate_csv_file)
-      send_file payroll_report_path, filename: File.basename(payroll_report_path), type: "text/csv"
+      send_file payroll_report_path, filename: File.basename(payroll_report_path), type: 'text/csv'
     else
-      redirect_to request.referer || payrolls_path , alert: "❌ File not found."
+      redirect_to request.referer || payrolls_path, alert: '❌ File not found.'
     end
   end
 
   def send_email
     PayrollReportMailerService.new(@customer, @payroll).send_email
-    redirect_to request.referer || payrolls_path, notice: "📧 Payroll report email sent."
+    redirect_to request.referer || payrolls_path, notice: '📧 Payroll report email sent.'
   end
 
   private
@@ -66,7 +68,7 @@ class ArchivePayrollsController < ApplicationController
   end
 
   def payroll_report_path
-    Rails.root.join("public", "payroll_reports", @customer.id.to_s, "#{@payroll.pay_date}.csv")
+    Rails.public_path.join('payroll_reports', @customer.id.to_s, "#{@payroll.pay_date}.csv")
   end
 
   def create_archive
@@ -82,6 +84,6 @@ class ArchivePayrollsController < ApplicationController
   end
 
   def record_not_found
-    redirect_to archive_payrolls_path, alert: "⚠️ Record not found."
+    redirect_to archive_payrolls_path, alert: '⚠️ Record not found.'
   end
 end

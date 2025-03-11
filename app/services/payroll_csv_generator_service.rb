@@ -44,7 +44,8 @@ class PayrollCsvGeneratorService
   end
 
   def write_headers(csv)
-    csv << ["Employee ID", "Employee Name", "Description", "Rate", "Hours", "Earnings", "Reimbursements & Other Payments", "Withholdings", "Deductions", "Net Pay"]
+    csv << ['Employee ID', 'Employee Name', 'Description', 'Rate', 'Hours', 'Earnings',
+            'Reimbursements & Other Payments', 'Withholdings', 'Deductions', 'Net Pay']
   end
 
   def generate_employee_row(statement, employee, descriptions)
@@ -52,7 +53,7 @@ class PayrollCsvGeneratorService
       employee.individual_id,
       "#{employee.first_name} #{employee.last_name}",
       @formatter.format_description(statement, descriptions),
-      employee.income["amount"],
+      employee.income['amount'],
       statement.total_hours,
       @formatter.format_earning(statement),
       @formatter.format_reimbursements(statement),

@@ -1,30 +1,112 @@
-inherit_from:
-  - .rubocop_todo.yml
+# .rubocop.yml
 
-plugins:
+# Rails cops
+require:
   - rubocop-rails
-  - rubocop-performance
-  - rubocop-rspec # If using RSpec
-
+  - rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 3.1 # Change based on your Ruby version
+  TargetRubyVersion: 3.3.0
   NewCops: enable
   Exclude:
-    - "bin/**/*"
-    - "db/**/*"
-    - "node_modules/**/*"
-    - "tmp/**/*"
-    - "vendor/**/*"
+    - 'db/schema.rb'
+    - 'bin/**'
+    - 'vendor/**/*'
+    - 'spec/spec_helper.rb'
+    - 'db/migrate/**'
+    - 'config/puma.rb'
+    - 'config.ru'
+    - 'config/environments/development.rb'
+    - 'config/environments/production.rb'
+    - 'config/environments/test.rb'
+    - 'config/initializers/devise.rb'
+    - 'config/initializers/doorkeeper.rb'
+    - 'config/initializers/filter_parameter_logging.rb'
+    - 'config/application.rb'
+    - 'config/boot.rb'
+    - 'config/environment.rb'
+    - 'Rakefile'
+    - 'spec/support/api/schemas/**/*'
+
+Layout/LineLength:
+  Max: 120
+  AllowHeredoc: true
+  AllowURI: true
+
+Layout/TrailingWhitespace:
+  Enabled: true
+
+Layout/EmptyLines:
+  Enabled: true
+  AllowAdjacentToComments: true
+
+Metrics/MethodLength:
+  Max: 20
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/ClassLength:
+  Max: 150
+
+Metrics/BlockLength:
+  Max: 25
+  Exclude:
+    - 'spec/**/*'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/Documentation:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: true
+
+Lint/UselessAssignment:
+  Enabled: true
+
+Lint/AmbiguousRegexpLiteral:
+  Enabled: true
+
+Security/Open:
+  Enabled: true
 
 Rails:
   Enabled: true
 
-Performance/Detect:
+Rails/HasAndBelongsToMany:
+  Enabled: false
+
+Rails/Output:
   Enabled: true
 
-Performance/RedundantMerge:
+Rails/TimeZone:
   Enabled: true
 
-Performance/ReverseEach:
+Rails/OutputSafety:
   Enabled: true
+
+RSpec:
+  Enabled: true
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/NestedGroups:
+  Max: 3
+
+RSpec/LetSetup:
+  Enabled: true
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
+
